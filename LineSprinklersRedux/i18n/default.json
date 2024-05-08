@@ -1,0 +1,11 @@
+{
+    // Basic
+    "LineSprinkler.DisplayName": "Line Sprinkler",
+    "LineSprinkler.Description": "Waters 4 tiles in a straight line every morning.",
+    // Quality
+    "QualityLineSprinkler.DisplayName": "Quality Line Sprinkler",
+    "QualityLineSprinkler.Description": "Waters 8 tiles in a straight line every morning.",
+    // Quality
+    "IridiumLineSprinkler.DisplayName": "Iridum Line Sprinkler",
+    "IridiumLineSprinkler.Description": "Waters 24 tiles in a straight line every morning."
+}
