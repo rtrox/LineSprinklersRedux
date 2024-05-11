@@ -1,0 +1,11 @@
+
+{
+    "Name": "Line Sprinklers Redux",
+    "Author": "rtrox",
+    "Version": "0.0.1",
+    "UniqueID": "rtrox.LineSprinklersRedux",
+    "MinimumApiVersion": "4.0.0",
+    "Description": "A Fresh Content Patcher version of Line Sprinklers.",
+    "UpdateKeys": [],
+    "EntryDll": "LineSprinklersRedux.dll",
+}
