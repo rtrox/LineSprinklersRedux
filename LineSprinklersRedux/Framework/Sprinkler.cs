@@ -7,6 +7,7 @@ using StardewValley;
 using StardewValley.GameData.BigCraftables;
 using LineSprinklersRedux.Framework.Data;
 using System;
+using StardewValley.ItemTypeDefinitions;
 
 namespace LineSprinklersRedux.Framework
 {
@@ -24,16 +25,23 @@ namespace LineSprinklersRedux.Framework
             var tile = sprinkler.TileLocation;
 
             int range = CustomFields.GetRange(sprinkler);
+            if (HasPressureNozzle(sprinkler))
+            {
+                range *= 2;
+            }
+
             SprinklerDirection direction = ModData.GetDirection(sprinkler);
             switch (direction)
             {
                 case SprinklerDirection.Right:
-                    for (int i = 1; i <= range; i++) {
+                    for (int i = 1; i <= range; i++)
+                    {
                         yield return new Vector2(tile.X + i, tile.Y);
                     }
                     break;
                 case SprinklerDirection.Down:
-                    for (int i = 1; i <= range; i++) {
+                    for (int i = 1; i <= range; i++)
+                    {
                         yield return new Vector2(tile.X, tile.Y + i);
                     }
                     break;
@@ -58,8 +66,8 @@ namespace LineSprinklersRedux.Framework
             var current = ModData.GetDirection(sprinkler);
             ModData.SetDirection(sprinkler, current.Cycle());
             SetSpriteFromRotation(sprinkler);
-        
-        
+
+
         }
 
         public static void SetSpriteFromRotation(SObject sprinkler)
@@ -109,6 +117,55 @@ namespace LineSprinklersRedux.Framework
                     });
                     break;
             }
+        }
+
+        public static void DrawAttachments(SObject sprinkler, SpriteBatch spriteBatch, int x, int y, float alpha)
+        {
+            Microsoft.Xna.Framework.Rectangle boundingBoxAt = sprinkler.GetBoundingBoxAt(x, y);
+            if (sprinkler.heldObject.Value != null)
+            {
+                Vector2 vector3 = Vector2.Zero;
+                if (sprinkler.heldObject.Value.QualifiedItemId == "(O)913")
+                {
+                    vector3 = new Vector2(0f, -20f);
+                }
+
+                // Override texture for Pressure Nozzles to be directional.
+                ParsedItemData heldItemData = ItemRegistry.GetDataOrErrorItem(sprinkler.heldObject.Value.QualifiedItemId);
+                var sourceRect = heldItemData.GetSourceRect(1);
+                if (HasPressureNozzle(sprinkler))
+                {
+                    heldItemData = ItemRegistry.GetDataOrErrorItem(ModConstants.OverlayDummyItemID);
+                    sourceRect = heldItemData.GetSourceRect(spriteIndex: (int)ModData.GetDirection(sprinkler));
+                }
+
+                spriteBatch.Draw(
+                    heldItemData.GetTexture(),
+                    Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64 + 32 + ((sprinkler.shakeTimer > 0) ? Game1.random.Next(-1, 2) : 0), y * 64 + 32 + ((sprinkler.shakeTimer > 0) ? Game1.random.Next(-1, 2) : 0)) + vector3),
+                    sourceRect,
+                    Color.White * alpha,
+                    0f,
+                    new Vector2(8f, 8f),
+                    (sprinkler.scale.Y > 1f) ? sprinkler.getScale().Y : 4f,
+                    sprinkler.Flipped ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
+                    (float)(sprinkler.isPassable() ? boundingBoxAt.Top : boundingBoxAt.Bottom) / 10000f + 1E-05f);
+            }
+        }
+        private static Texture2D PressureNozzleSpriteFromRotation(SObject sprinkler)
+        {
+            var dir = ModData.GetDirection(sprinkler);
+            var data = ItemRegistry.GetDataOrErrorItem($"{ModConstants.OverlayDummyItemID}_{dir}");
+            return data.GetTexture();
+        }
+
+        private static bool HasPressureNozzle(SObject sprinkler)
+        {
+            if (!IsLineSprinkler(sprinkler)) return false;
+            if (sprinkler.heldObject.Value != null)
+            {
+                return sprinkler.heldObject.Value.QualifiedItemId == "(O)915";
+            }
+            return false;
         }
     }
 }

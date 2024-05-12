@@ -35,22 +35,22 @@
         "Recipe": "621 1 /Field/{0}/true/Farming 6",
         "RecyclerOutput": "(0)621"
     },
-    {
-        "Id": "IridiumLineSprinkler",
-      "Object": {
-        "Name": "IridiumLineSprinkler",
-        "Fragility": 0,
-        "Price": 1000,
-        "CanBePlacedOutdoors": true,
-        "CanBePlacedIndoors": true,
-        "IsLamp": false,
-        "Texture": "/Mods/{0}/Objects",
-        "SpriteIndex": "8",
-        "CustomFields": {
-          "Range": 24
-        }
-      },
-        "Recipe": "645 1 /Field/{0}/true/Farming 9",
-        "RecyclerOutput":  "(O)645"
-    }
+  {
+    "Id": "IridiumLineSprinkler",
+    "Object": {
+      "Name": "IridiumLineSprinkler",
+      "Fragility": 0,
+      "Price": 1000,
+      "CanBePlacedOutdoors": true,
+      "CanBePlacedIndoors": true,
+      "IsLamp": false,
+      "Texture": "/Mods/{0}/Objects",
+      "SpriteIndex": "8",
+      "CustomFields": {
+        "Range": 24
+      }
+    },
+    "Recipe": "645 1 /Field/{0}/true/Farming 9",
+    "RecyclerOutput": "(O)645"
+  }
 ]

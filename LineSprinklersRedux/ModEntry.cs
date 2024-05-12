@@ -133,10 +133,6 @@ namespace LineSprinklersRedux
                     continue;
                 }
                 Sprinkler.SetSpriteFromRotation(added.Value);
-                if (added.Value.QualifiedItemId == "(O)915")
-                {
-                    this.Monitor.Log("Pressure Nozzle Plazed");
-                }
             }
         }
 
@@ -187,6 +183,24 @@ namespace LineSprinklersRedux
                 });
             }
 
+            if (e.NameWithoutLocale.IsEquivalentTo("Data/Objects"))
+            {
+                e.Edit(asset =>
+                {
+                    // Dummy Object to let the base game handle loading these textures.
+                    var data = asset.AsDictionary<string, ObjectData>().Data;
+                    var id = ModConstants.OverlayDummyItemID;
+                    var obj = new ObjectData
+                    {
+                        Name = id,
+                        DisplayName = id,
+                        Description = id,
+                        Texture = $"/Mods/{this.ModManifest.UniqueID}/Overlays",
+                        SpriteIndex = 0
+                    };
+                    data[id] = obj;
+                });
+            }
             if (e.NameWithoutLocale.IsEquivalentTo("Data/CraftingRecipes"))
             {
                 e.Edit(asset =>
@@ -205,6 +219,10 @@ namespace LineSprinklersRedux
             if (e.NameWithoutLocale.IsEquivalentTo($"/Mods/{this.ModManifest.UniqueID}/Objects"))
             {
                 e.LoadFromModFile<Texture2D>("assets/LineSprinklers.png", AssetLoadPriority.Exclusive);
+            }
+            if (e.NameWithoutLocale.IsEquivalentTo($"/Mods/{this.ModManifest.UniqueID}/Overlays"))
+            {
+                e.LoadFromModFile<Texture2D>("assets/Overlays.png", AssetLoadPriority.Exclusive);
             }
 
             if (e.NameWithoutLocale.IsEquivalentTo("Data/Machines"))

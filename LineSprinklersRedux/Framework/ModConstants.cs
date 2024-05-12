@@ -13,5 +13,7 @@ namespace LineSprinklersRedux.Framework
         // ContextTags
         public static string MainContextTag = $"{ModKeySpace}_LineSprinklers";
 
+        public static string OverlayDummyItemID = $"{ModKeySpace}_DummyOverlayItem";
+
     }
 }

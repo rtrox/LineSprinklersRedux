@@ -5,6 +5,10 @@ using Microsoft.Xna.Framework;
 using StardewValley;
 using System;
 using xTile.Dimensions;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
+using Microsoft.Xna.Framework.Graphics;
+using StardewValley.ItemTypeDefinitions;
+using LineSprinklersRedux.Framework.Data;
 
 namespace LineSprinklersRedux.Framework
 {
@@ -36,6 +40,11 @@ namespace LineSprinklersRedux.Framework
                     original: AccessTools.DeclaredMethod(typeof(SObject), nameof(SObject.ApplySprinklerAnimation)),
                     prefix: new HarmonyMethod(typeof(BaseGamePatches), nameof(Object_ApplySprinklerAnimation_Prefix))
                     );
+                harmony.Patch(
+                    original: AccessTools.Method(typeof(SObject), nameof(SObject.draw), [typeof(SpriteBatch), typeof(int), typeof(int), typeof(float)]),
+                    postfix: new HarmonyMethod(typeof(BaseGamePatches), nameof(Object_draw_Postfix))
+                );
+
             } catch (Exception e)
             {
                 ModEntry.IMonitor!.Log($"Could not Patch LineSprinklers: \n{e}", LogLevel.Error);
@@ -94,6 +103,14 @@ namespace LineSprinklersRedux.Framework
                 return false;
             }
             return true;
+        }
+
+        private static void Object_draw_Postfix(SObject __instance, SpriteBatch spriteBatch, int x, int y, float alpha)
+        {
+            if (Sprinkler.IsLineSprinkler(__instance))
+            {
+                Sprinkler.DrawAttachments(__instance, spriteBatch, x, y, alpha);
+            }
         }
     }
 }
