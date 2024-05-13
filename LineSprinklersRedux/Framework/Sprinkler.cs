@@ -150,6 +150,17 @@ namespace LineSprinklersRedux.Framework
                     sprinkler.Flipped ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
                     (float)(sprinkler.isPassable() ? boundingBoxAt.Top : boundingBoxAt.Bottom) / 10000f + 1E-05f);
             }
+            if (sprinkler.SpecialVariable == 999999)
+            {
+                if (sprinkler.heldObject.Value != null && sprinkler.heldObject.Value.QualifiedItemId == "(O)913")
+                {
+                    Torch.drawBasicTorch(spriteBatch, (float)(x * 64) - 2f, y * 64 - 32, (float)boundingBoxAt.Bottom / 10000f + 1E-06f);
+                }
+                else
+                {
+                    Torch.drawBasicTorch(spriteBatch, (float)(x * 64) - 2f, y * 64 - 32 + 12, (float)(boundingBoxAt.Bottom + 2) / 10000f);
+                }
+            }
         }
         private static Texture2D PressureNozzleSpriteFromRotation(SObject sprinkler)
         {
