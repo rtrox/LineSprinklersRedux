@@ -1,13 +1,13 @@
 {
   // Basic
   "LineSprinkler.DisplayName": "Aspersor en Línea",
-  "LineSprinkler.Description": "Riega 4 casillas en línea recta cada mañana.",
+  "LineSprinkler.Description": "Riega 4 casillas en línea recta hacia una dirección cada mañana.",
   // Quality
   "QualityLineSprinkler.DisplayName": "Aspersor en Línea de Calidad",
-  "QualityLineSprinkler.Description": "Riega 8 casillas en línea recta cada mañana.",
+  "QualityLineSprinkler.Description": "Riega 8 casillas en línea recta hacia una dirección cada mañana.",
   // Iridium
   "IridiumLineSprinkler.DisplayName": "Aspersor en Línea de Iridio",
-  "IridiumLineSprinkler.Description": "Riega 24 casillas en línea recta cada mañana.",
+  "IridiumLineSprinkler.Description": "Riega 24 casillas en línea recta hacia una dirección cada mañana.",
 
   // Config
   "Controls": "Controles",
