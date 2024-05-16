@@ -24,11 +24,7 @@ namespace LineSprinklersRedux.Framework
         {
             var tile = sprinkler.TileLocation;
 
-            int range = CustomFields.GetRange(sprinkler);
-            if (HasPressureNozzle(sprinkler))
-            {
-                range *= 2;
-            }
+            int range = Range(sprinkler);
 
             SprinklerDirection direction = ModData.GetDirection(sprinkler);
             switch (direction)
@@ -61,6 +57,15 @@ namespace LineSprinklersRedux.Framework
             }
         }
 
+        public static int Range(SObject sprinkler)
+        {
+            int baseRange = CustomFields.GetRange(sprinkler);
+            if (HasPressureNozzle(sprinkler))
+            {
+                return baseRange * 2;
+            }
+            return baseRange;
+        }
         public static void Rotate(SObject sprinkler)
         {
             var current = ModData.GetDirection(sprinkler);
@@ -80,43 +85,66 @@ namespace LineSprinklersRedux.Framework
         public static void ApplySprinkler(SObject sprinkler)
         {
             GameLocation location = sprinkler.Location;
-            int delayBeforeAnimationStart = Game1.random.Next(1000);
-            int num = (int)sprinkler.TileLocation.X;
-            int num2 = (int)sprinkler.TileLocation.Y;
-            switch (ModData.GetDirection(sprinkler))
+            switch (Range(sprinkler))
             {
-                case SprinklerDirection.Up:
-                    location.temporarySprites.Add(new TemporaryAnimatedSprite(29, sprinkler.TileLocation * 64f + new Vector2(0f, -48f), Color.White * 0.5f, 4, flipped: false, 60f, 100)
-                    {
-                        delayBeforeAnimationStart = delayBeforeAnimationStart,
-                        id = num * 4000 + num2
-                    });
+                case 4:
+                    location.temporarySprites.Add(GetAnimatedSprite(sprinkler, new Rectangle(0, 0, 64, 256)));
                     break;
-                case SprinklerDirection.Right:
-                    location.temporarySprites.Add(new TemporaryAnimatedSprite(29, sprinkler.TileLocation * 64f + new Vector2(48f, 0f), Color.White * 0.5f, 4, flipped: false, 60f, 100)
-                    {
-                        rotation = MathF.PI / 2f,
-                        delayBeforeAnimationStart = delayBeforeAnimationStart,
-                        id = num * 4000 + num2
-                    });
+                case 8:
+                    location.temporarySprites.Add(GetAnimatedSprite(sprinkler, new Rectangle(0, 256, 64, 512)));
                     break;
-                case SprinklerDirection.Down:
-                    location.temporarySprites.Add(new TemporaryAnimatedSprite(29, sprinkler.TileLocation * 64f + new Vector2(0f, 48f), Color.White * 0.5f, 4, flipped: false, 60f, 100)
-                    {
-                        rotation = MathF.PI,
-                        delayBeforeAnimationStart = delayBeforeAnimationStart,
-                        id = num * 4000 + num2
-                    });
+                case 16:
+                    location.temporarySprites.Add(GetAnimatedSprite(sprinkler, new Rectangle(0, 768, 64, 1024)));
                     break;
-                case SprinklerDirection.Left:
-                    location.temporarySprites.Add(new TemporaryAnimatedSprite(29, sprinkler.TileLocation * 64f + new Vector2(-48f, 0f), Color.White * 0.5f, 4, flipped: false, 60f, 100)
-                    {
-                        rotation = 4.712389f,
-                        delayBeforeAnimationStart = delayBeforeAnimationStart,
-                        id = num * 4000 + num2
-                    });
+                case 24:
+                    location.temporarySprites.Add(GetAnimatedSprite(sprinkler, new Rectangle(256, 0, 64, 1536)));
+                    break;
+                case 48:
+                    location.temporarySprites.Add(GetAnimatedSprite(sprinkler, new Rectangle(512, 0, 64, 3072)));
+                    break;
+                default:
+                    location.temporarySprites.Add(GetAnimatedSprite(sprinkler, new Rectangle(0, 0, 64, 256)));
                     break;
             }
+
+        }
+
+        private static TemporaryAnimatedSprite GetAnimatedSprite(SObject sprinkler, Rectangle sourceRect)
+        {
+            var dir = ModData.GetDirection(sprinkler);
+            ModEntry.IMonitor.Log($"Direction: {dir}", LogLevel.Debug);
+            float rotation = dir switch
+            {
+                SprinklerDirection.Up => 0f,
+                SprinklerDirection.Right => MathF.PI / 2f,
+                SprinklerDirection.Down => MathF.PI,
+                SprinklerDirection.Left => 4.712389f,
+                _ => 0f,
+            };
+            Vector2 relativePosition = dir switch
+            {
+                SprinklerDirection.Up => new Vector2(0f, -1f * sourceRect.Height),
+                SprinklerDirection.Right => new Vector2(sourceRect.Height / 2f + 32f, (sourceRect.Height / 2f - 26f) * -1),
+                SprinklerDirection.Down => new Vector2(0f, 64f),
+                SprinklerDirection.Left => new Vector2((sourceRect.Height / 2f + 32f) * -1, (sourceRect.Height / 2f - 26f) * -1),
+                _ => new Vector2(),
+
+            };
+            return new TemporaryAnimatedSprite(
+                $"/Mods/{ModConstants.ModKeySpace}/Animations",
+                sourceRect,
+                60f,
+                4,
+                100,
+                sprinkler.TileLocation * 64f + relativePosition,
+                flicker: false,
+                flipped: false)
+            {
+                color = Color.White * 0.4f,
+                delayBeforeAnimationStart = Game1.random.Next(1000),
+                id = (int)sprinkler.TileLocation.X * 4000 + (int)sprinkler.TileLocation.Y,
+                rotation = rotation,
+            };
         }
 
         public static void DrawAttachments(SObject sprinkler, SpriteBatch spriteBatch, int x, int y, float alpha)

@@ -15,6 +15,7 @@ using StardewValley.GameData.Machines;
 
 using LineSprinklersRedux.Framework;
 using HarmonyLib;
+using xTile.Tiles;
 
 
 /* TODO NEXT 
@@ -223,6 +224,10 @@ namespace LineSprinklersRedux
             if (e.NameWithoutLocale.IsEquivalentTo($"/Mods/{this.ModManifest.UniqueID}/Overlays"))
             {
                 e.LoadFromModFile<Texture2D>("assets/Overlays.png", AssetLoadPriority.Exclusive);
+            }
+            if (e.NameWithoutLocale.IsEquivalentTo($"/Mods/{this.ModManifest.UniqueID}/Animations"))
+            {
+                e.LoadFromModFile<Texture2D>("assets/Animations.png", AssetLoadPriority.Exclusive);
             }
 
             if (e.NameWithoutLocale.IsEquivalentTo("Data/Machines"))
