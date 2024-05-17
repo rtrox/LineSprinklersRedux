@@ -16,6 +16,7 @@ using StardewValley.GameData.Machines;
 using LineSprinklersRedux.Framework;
 using HarmonyLib;
 using xTile.Tiles;
+using LineSprinklersRedux.Framework.Patches;
 
 
 /* TODO NEXT 
@@ -33,32 +34,49 @@ using xTile.Tiles;
 
 namespace LineSprinklersRedux
 {
-    /// <summary>The mod entry point.</summary>
-    internal sealed class ModEntry : Mod
+
+    public class ModEntry : Mod
     {
-        internal static IModHelper? IHelper;
-        internal static IMonitor? IMonitor;
+        internal static IMonitor? Mon;
+        internal static IManifest? Manifest;
+        internal static new IModHelper? Helper;
+
+        internal LineSprinklersReduxMod? mod;
+     
+        public override void Entry(IModHelper helper)
+        {
+           this.mod = new LineSprinklersReduxMod(helper, Monitor, ModManifest);
+            Mon = Monitor;
+            Manifest = ModManifest;
+            Helper = helper;
+
+        }
+
+        public override object? GetApi()
+        {
+            return this.mod!.GetApi();
+        }
+    }
+    
+    /// <summary>The mod entry point.</summary>
+    internal sealed class LineSprinklersReduxMod
+    {
+        internal IModHelper Helper;
+        internal IMonitor Monitor;
+        internal IManifest ModManifest;
+        internal ILineSprinklersReduxAPI api;
 
         internal static List<ObjectInformation>? SprinklersObjectsInfo;
 
         private ModConfig Config = null!;
 
-        /*********
-        ** Accessors
-        *********/
-        /// <summary>The unique assets for which <see cref="IAssetLoader.CanLoad{T}"/> was called.</summary>
-        private readonly HashSet<IAssetName> LoadedAssets = new();
-
-        /*********
-        ** Public methods
-        *********/
-        /// <summary>The mod entry point, called after the mod is first loaded.</summary>
-        /// <param name="helper">Provides simplified APIs for writing mods.</param>
-        public override void Entry(IModHelper helper)
+        public LineSprinklersReduxMod(IModHelper helper, IMonitor Monitor, IManifest ModManifest)
         {
-            IHelper = Helper;
-            IMonitor = Monitor;
+            this.Helper = helper;
+            this.Monitor = Monitor;
+            this.ModManifest = ModManifest;
 
+            this.api = new LineSprinklerReduxAPI();
             this.Config = helper.ReadConfig<ModConfig>();
 
             SprinklersObjectsInfo = Helper.Data.ReadJsonFile<List<ObjectInformation>>("assets/data.json");
@@ -72,7 +90,11 @@ namespace LineSprinklersRedux
             helper.Events.Input.ButtonsChanged += this.OnButtonsChanged;
             helper.Events.Content.AssetRequested += this.OnAssetRequested;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
-            helper.Events.World.ObjectListChanged += OnObjectListChanged;
+        }
+
+        public object GetApi()
+        {
+            return api;
         }
 
         /// <inheritdoc cref="IGameLoopEvents.GameLaunched"/>
@@ -144,7 +166,7 @@ namespace LineSprinklersRedux
         {
             if (e.NameWithoutLocale.IsEquivalentTo("Data/BigCraftables"))
             {
-                e.Edit(asset =>
+                e.Edit((Action<IAssetData>)(asset =>
                 {
                     var data = asset.AsDictionary<string, BigCraftableData>().Data;
                     foreach (var item in SprinklersObjectsInfo ??= new List<ObjectInformation>())
@@ -181,7 +203,7 @@ namespace LineSprinklersRedux
                         }
                         data[id] = item.Object;
                     }
-                });
+                }));
             }
 
             if (e.NameWithoutLocale.IsEquivalentTo("Data/Objects"))

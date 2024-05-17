@@ -10,11 +10,11 @@ using Microsoft.Xna.Framework.Graphics;
 using StardewValley.ItemTypeDefinitions;
 using LineSprinklersRedux.Framework.Data;
 
-namespace LineSprinklersRedux.Framework
+namespace LineSprinklersRedux.Framework.Patches
 {
     internal static class BaseGamePatches
     {
-        internal static void Apply (Harmony harmony)
+        internal static void Apply(Harmony harmony)
         {
             try
             {
@@ -22,7 +22,7 @@ namespace LineSprinklersRedux.Framework
                     original: AccessTools.DeclaredMethod(typeof(SObject), nameof(SObject.GetSprinklerTiles)),
                     prefix: new HarmonyMethod(typeof(BaseGamePatches), nameof(Object_GetSprinklerTiles_Prefix)),
                     postfix: new HarmonyMethod(typeof(BaseGamePatches), nameof(Object_GetSprinklerTiles_Postfix))
-    
+
                 );
                 harmony.Patch(
                     original: AccessTools.DeclaredMethod(typeof(SObject), nameof(SObject.IsSprinkler)),
@@ -45,9 +45,10 @@ namespace LineSprinklersRedux.Framework
                     postfix: new HarmonyMethod(typeof(BaseGamePatches), nameof(Object_draw_Postfix))
                 );
 
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
-                ModEntry.IMonitor!.Log($"Could not Patch LineSprinklers: \n{e}", LogLevel.Error);
+                ModEntry.Mon!.Log($"Could not Patch LineSprinklers: \n{e}", LogLevel.Error);
             }
         }
 
@@ -97,9 +98,11 @@ namespace LineSprinklersRedux.Framework
             return false;
         }
 
-        private static bool Object_ApplySprinklerAnimation_Prefix(SObject __instance) {
-            if (Sprinkler.IsLineSprinkler(__instance)) {
-                Sprinkler.ApplySprinkler(__instance);
+        private static bool Object_ApplySprinklerAnimation_Prefix(SObject __instance)
+        {
+            if (Sprinkler.IsLineSprinkler(__instance))
+            {
+                Sprinkler.ApplySprinklerAnimation(__instance);
                 return false;
             }
             return true;

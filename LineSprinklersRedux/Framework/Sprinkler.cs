@@ -82,37 +82,53 @@ namespace LineSprinklersRedux.Framework
             sprinkler.ParentSheetIndex = baseSprite + (int)dir;
         }
 
-        public static void ApplySprinkler(SObject sprinkler)
+        public static void ApplySprinklerAnimation(SObject sprinkler)
+        {
+            ApplySprinklerAnimation(sprinkler, Game1.random.Next(1000));
+        }
+
+        public static void ApplySprinklerAnimation(SObject sprinkler, int delayBeforeAnimationStart)
         {
             GameLocation location = sprinkler.Location;
             switch (Range(sprinkler))
             {
                 case 4:
-                    location.temporarySprites.Add(GetAnimatedSprite(sprinkler, new Rectangle(0, 0, 64, 256)));
+                    location.temporarySprites.Add(GetAnimatedSprite(sprinkler, new Rectangle(0, 0, 64, 256), delayBeforeAnimationStart));
                     break;
                 case 8:
-                    location.temporarySprites.Add(GetAnimatedSprite(sprinkler, new Rectangle(0, 256, 64, 512)));
+                    location.temporarySprites.Add(GetAnimatedSprite(sprinkler, new Rectangle(0, 256, 64, 512), delayBeforeAnimationStart));
                     break;
                 case 16:
-                    location.temporarySprites.Add(GetAnimatedSprite(sprinkler, new Rectangle(0, 768, 64, 1024)));
+                    location.temporarySprites.Add(GetAnimatedSprite(sprinkler, new Rectangle(0, 768, 64, 1024), delayBeforeAnimationStart));
                     break;
                 case 24:
-                    location.temporarySprites.Add(GetAnimatedSprite(sprinkler, new Rectangle(256, 0, 64, 1536)));
+                    location.temporarySprites.Add(GetAnimatedSprite(sprinkler, new Rectangle(256, 0, 64, 1536), delayBeforeAnimationStart));
                     break;
                 case 48:
-                    location.temporarySprites.Add(GetAnimatedSprite(sprinkler, new Rectangle(512, 0, 64, 3072)));
+                    location.temporarySprites.Add(GetAnimatedSprite(sprinkler, new Rectangle(512, 0, 64, 3072), delayBeforeAnimationStart));
                     break;
                 default:
-                    location.temporarySprites.Add(GetAnimatedSprite(sprinkler, new Rectangle(0, 0, 64, 256)));
+                    location.temporarySprites.Add(GetAnimatedSprite(sprinkler, new Rectangle(0, 0, 64, 256), delayBeforeAnimationStart));
                     break;
             }
 
         }
 
-        private static TemporaryAnimatedSprite GetAnimatedSprite(SObject sprinkler, Rectangle sourceRect)
+        public static void ApplySprinkler(SObject sprinkler)
+        {
+            if (sprinkler == null || !IsLineSprinkler(sprinkler)) return;
+            foreach (var tile in sprinkler.GetSprinklerTiles())
+            {
+                sprinkler.ApplySprinkler(tile);
+            }
+        }
+
+
+
+        private static TemporaryAnimatedSprite GetAnimatedSprite(SObject sprinkler, Rectangle sourceRect, int delayBeforeAnimationStart)
         {
             var dir = ModData.GetDirection(sprinkler);
-            ModEntry.IMonitor.Log($"Direction: {dir}", LogLevel.Debug);
+            ModEntry.Mon!.Log($"Direction: {dir}", LogLevel.Debug);
             float rotation = dir switch
             {
                 SprinklerDirection.Up => 0f,
@@ -141,7 +157,7 @@ namespace LineSprinklersRedux.Framework
                 flipped: false)
             {
                 color = Color.White * 0.4f,
-                delayBeforeAnimationStart = Game1.random.Next(1000),
+                delayBeforeAnimationStart = delayBeforeAnimationStart,
                 id = (int)sprinkler.TileLocation.X * 4000 + (int)sprinkler.TileLocation.Y,
                 rotation = rotation,
             };
@@ -189,12 +205,6 @@ namespace LineSprinklersRedux.Framework
                     Torch.drawBasicTorch(spriteBatch, (float)(x * 64) - 2f, y * 64 - 32 + 12, (float)(boundingBoxAt.Bottom + 2) / 10000f);
                 }
             }
-        }
-        private static Texture2D PressureNozzleSpriteFromRotation(SObject sprinkler)
-        {
-            var dir = ModData.GetDirection(sprinkler);
-            var data = ItemRegistry.GetDataOrErrorItem($"{ModConstants.OverlayDummyItemID}_{dir}");
-            return data.GetTexture();
         }
 
         private static bool HasPressureNozzle(SObject sprinkler)
