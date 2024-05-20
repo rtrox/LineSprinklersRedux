@@ -17,6 +17,7 @@ using LineSprinklersRedux.Framework;
 using HarmonyLib;
 using xTile.Tiles;
 using LineSprinklersRedux.Framework.Patches;
+using System.Diagnostics;
 
 
 /* TODO NEXT 
@@ -139,23 +140,6 @@ namespace LineSprinklersRedux
                     Sprinkler.Rotate(obj);
                 }
 
-            }
-        }
-
-        /// <inheritdoc cref="IWorldEvents.ObjectListChanged"/>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The event data.</param>
-        private void OnObjectListChanged(object? sender, ObjectListChangedEventArgs e)
-        {
-            // ParentSeetIndex isn't propagated to the placed item, this ensures that sprinklers are correctly rotated
-            // without patching placementAction.
-            foreach (var added in e.Added)
-            {
-                if (!Sprinkler.IsLineSprinkler(added.Value))
-                {
-                    continue;
-                }
-                Sprinkler.SetSpriteFromRotation(added.Value);
             }
         }
 

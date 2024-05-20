@@ -42,8 +42,9 @@ namespace LineSprinklersRedux.Framework.Patches
                     );
                 harmony.Patch(
                     original: AccessTools.Method(typeof(SObject), nameof(SObject.draw), [typeof(SpriteBatch), typeof(int), typeof(int), typeof(float)]),
+                    prefix: new HarmonyMethod(typeof(BaseGamePatches), nameof(Object_draw_Prefix)),
                     postfix: new HarmonyMethod(typeof(BaseGamePatches), nameof(Object_draw_Postfix))
-                );
+                ); ;
 
             }
             catch (Exception e)
@@ -104,6 +105,15 @@ namespace LineSprinklersRedux.Framework.Patches
             {
                 Sprinkler.ApplySprinklerAnimation(__instance);
                 return false;
+            }
+            return true;
+        }
+
+        private static bool Object_draw_Prefix(SObject __instance, SpriteBatch spriteBatch, int x, int y, float alpha)
+        {
+            if (Sprinkler.IsLineSprinkler(__instance))
+            {
+                Sprinkler.SetSpriteFromRotation(__instance);
             }
             return true;
         }
