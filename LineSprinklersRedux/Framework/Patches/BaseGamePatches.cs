@@ -3,12 +3,7 @@ using HarmonyLib;
 using StardewModdingAPI;
 using Microsoft.Xna.Framework;
 using StardewValley;
-using System;
-using xTile.Dimensions;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
 using Microsoft.Xna.Framework.Graphics;
-using StardewValley.ItemTypeDefinitions;
-using LineSprinklersRedux.Framework.Data;
 
 namespace LineSprinklersRedux.Framework.Patches
 {
@@ -44,8 +39,11 @@ namespace LineSprinklersRedux.Framework.Patches
                     original: AccessTools.Method(typeof(SObject), nameof(SObject.draw), [typeof(SpriteBatch), typeof(int), typeof(int), typeof(float)]),
                     prefix: new HarmonyMethod(typeof(BaseGamePatches), nameof(Object_draw_Prefix)),
                     postfix: new HarmonyMethod(typeof(BaseGamePatches), nameof(Object_draw_Postfix))
-                ); ;
-
+                );
+                harmony.Patch(
+                    original: AccessTools.Method(typeof(SObject), nameof(SObject.placementAction)),
+                    prefix: new HarmonyMethod(typeof(BaseGamePatches), nameof(Object_placementAction_Prefix))
+                );
             }
             catch (Exception e)
             {
@@ -124,6 +122,18 @@ namespace LineSprinklersRedux.Framework.Patches
             {
                 Sprinkler.DrawAttachments(__instance, spriteBatch, x, y, alpha);
             }
+        }
+
+        private static bool Object_placementAction_Prefix(SObject __instance, GameLocation location, int x, int y, Farmer who, ref bool __result)
+        {
+            if (Sprinkler.IsLineSprinkler(__instance) && location.doesTileHavePropertyNoNull(x / 64, y / 64, "NoSprinklers", "Back") == "T")
+            {
+
+                Game1.showRedMessage(Game1.content.LoadString("Strings\\StringsFromCSFiles:NoSprinklers"));
+                __result = false;
+                return false;
+            }
+            return true;
         }
     }
 }
