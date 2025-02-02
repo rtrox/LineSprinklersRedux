@@ -1,0 +1,16 @@
+{
+  // Basic
+  "LineSprinkler.DisplayName": "직선 스프링클러",
+  "LineSprinkler.Description": "매일 아침 일직선으로 앞쪽 4칸에 물을 뿌립니다.",
+  // Quality
+  "QualityLineSprinkler.DisplayName": "고급 직선 스프링클러",
+  "QualityLineSprinkler.Description": "매일 아침 일직선으로 앞쪽 8칸에 물을 뿌립니다.",
+  // Iridium
+  "IridiumLineSprinkler.DisplayName": "이리듐 직선 스프링클러",
+  "IridiumLineSprinkler.Description": "매일 아침 일직선으로 앞쪽 24칸에 물을 뿌립니다.",
+
+  // Config
+  "Controls": "조작",
+  "RotateSprinklerKeybind": "스프링클러 회전",
+  "RotateSprinklerKeybind.Tooltip": "스프링클러를 손에 들거나 설치된 스프링클러 위에 마우스를 갖다 댄 상태에서 이 키를 누르면 스프링클러가 시계 방향으로 90° 회전합니다."
+}
