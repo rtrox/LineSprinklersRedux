@@ -208,12 +208,7 @@ namespace LineSprinklersRedux.Framework
 
         private static bool HasPressureNozzle(SObject sprinkler)
         {
-            if (!IsLineSprinkler(sprinkler)) return false;
-            if (sprinkler.heldObject.Value != null)
-            {
-                return sprinkler.heldObject.Value.QualifiedItemId == "(O)915";
-            }
-            return false;
+            return IsLineSprinkler(sprinkler) && sprinkler.GetBaseRadiusForSprinkler() != sprinkler.GetModifiedRadiusForSprinkler();
         }
     }
 }
