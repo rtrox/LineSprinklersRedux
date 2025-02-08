@@ -128,7 +128,6 @@ namespace LineSprinklersRedux.Framework
         private static TemporaryAnimatedSprite GetAnimatedSprite(SObject sprinkler, Rectangle sourceRect, int delayBeforeAnimationStart)
         {
             var dir = ModData.GetDirection(sprinkler);
-            ModEntry.Mon!.Log($"Direction: {dir}", LogLevel.Debug);
             float rotation = dir switch
             {
                 SprinklerDirection.Up => 0f,
