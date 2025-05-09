@@ -1,0 +1,16 @@
+{
+  // Basic
+  "LineSprinkler.DisplayName": "直線スプリンクラー",
+  "LineSprinkler.Description": "前方の4マスに毎朝水をやってくれる。",
+  // Quality
+  "QualityLineSprinkler.DisplayName": "高品質直線スプリンクラー",
+  "QualityLineSprinkler.Description": "前方の8マスに毎朝水をやってくれる。",
+  // Iridium
+  "IridiumLineSprinkler.DisplayName": "イリジウム製直線スプリンクラー",
+  "IridiumLineSprinkler.Description": "前方の24マスに毎朝水をやってくれる。",
+
+  // Config
+  "Controls": "操作",
+  "RotateSprinklerKeybind": "スプリンクラーの回転",
+  "RotateSprinklerKeybind.Tooltip": "スプリンクラーを手に持つか、設置済みのスプリンクラーにマウスカーソルを合わせた状態でこのキーを押すと、時計回りに90度回転します。"
+}
