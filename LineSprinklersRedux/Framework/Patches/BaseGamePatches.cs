@@ -28,8 +28,8 @@ namespace LineSprinklersRedux.Framework.Patches
                     prefix: new HarmonyMethod(typeof(BaseGamePatches), nameof(Object_IsInSprinklerRangeBroadphase_Prefix))
                 );
                 harmony.Patch(
-                    original: AccessTools.DeclaredMethod(typeof(SObject), nameof(SObject.GetModifiedRadiusForSprinkler)),
-                    prefix: new HarmonyMethod(typeof(BaseGamePatches), nameof(Object_GetModifiedRadiusForSprinkler_Prefix))
+                    original: AccessTools.DeclaredMethod(typeof(SObject), nameof(SObject.GetBaseRadiusForSprinkler)),
+                    prefix: new HarmonyMethod(typeof(BaseGamePatches), nameof(Object_GetBaseRadiusForSprinkler_Prefix))
                 );
                 harmony.Patch(
                     original: AccessTools.DeclaredMethod(typeof(SObject), nameof(SObject.ApplySprinklerAnimation)),
@@ -85,7 +85,7 @@ namespace LineSprinklersRedux.Framework.Patches
             return false;
         }
 
-        private static bool Object_GetModifiedRadiusForSprinkler_Prefix(SObject __instance, ref int __result)
+        private static bool Object_GetBaseRadiusForSprinkler_Prefix(SObject __instance, ref int __result)
         {
             if (!Sprinkler.IsLineSprinkler(__instance))
             {
@@ -93,6 +93,7 @@ namespace LineSprinklersRedux.Framework.Patches
             }
             // In `DayUpdate(), the base game ensures that the modified radius for the object is at least 0
             // as -1 is returned for non-sprinkler objects. I'm not sure why, as it's also checking `IsSprinkler`.
+            // Switched from patching GetModifiedRadiusForSprinkler to GetBaseRadiusForSprinkler to account for new pressure nozzle check.
             __result = 0;
             return false;
         }
