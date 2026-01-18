@@ -11,7 +11,7 @@ namespace LineSprinklersRedux.Framework
 {
     internal class ModConfig
     {
-        public KeybindList RotateSprinklerKeybindList { get; set; } = new(SButton.MouseMiddle);
+        public KeybindList RotateSprinklerKeybindList { get; set; } = KeybindList.Parse("MouseMiddle, ControllerA");
         public bool AllowRotatePlaced { get; set; } = true;
 
     }
