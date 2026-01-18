@@ -130,7 +130,7 @@ namespace LineSprinklersRedux
             {
                 Vector2 tile = this.Helper.Input.GetCursorPosition().GrabTile;
                 var obj = Game1.player.currentLocation.getObjectAtTile((int)tile.X, (int)tile.Y);
-                if (obj == null)
+                if (obj == null || !this.Config.AllowRotatePlaced)
                 {
                     obj = Game1.player.ActiveObject;
                 };

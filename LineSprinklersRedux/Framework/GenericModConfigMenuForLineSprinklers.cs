@@ -47,6 +47,16 @@ namespace LineSprinklersRedux.Framework
                 getValue: () => this.GetConfig().RotateSprinklerKeybindList,
                 setValue: (value) => this.GetConfig().RotateSprinklerKeybindList = value
             );
+            configMenu.AddSectionTitle(this.ModManifest, () => this.I18n.Get("Config"));
+            configMenu.AddBoolOption(
+                this.ModManifest,
+                name: () => this.I18n.Get("AllowRotatePlaced"),
+                tooltip: () => this.I18n.Get("AllowRotatePlaced.Tooltip"),
+                getValue: () => this.GetConfig().AllowRotatePlaced,
+                setValue: value => this.GetConfig().AllowRotatePlaced = value
+            );
+
+
         }
     }
 }

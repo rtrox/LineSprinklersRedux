@@ -12,5 +12,9 @@
   // Config
   "Controls": "Controls",
   "RotateSprinklerKeybind": "Rotate Sprinkler",
-  "RotateSprinklerKeybind.Tooltip": "Pressing this key while holding a sprinkler or hovering your mouse over a placed sprinkler will rotate it 90° to the right."
+  "RotateSprinklerKeybind.Tooltip": "Pressing this key while holding a sprinkler or hovering your mouse over a placed sprinkler will rotate it 90° to the right.",
+
+  "Config": "Configuration",
+  "AllowRotatePlaced": "Allow Rotation of Placed Sprinklers",
+  "AllowRotatePlaced.Tooltip": "When set, the Rotate Sprinkler keybind will also allow rotation of sprinklers that are already placed."
 }
